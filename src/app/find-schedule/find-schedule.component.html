@@ -1,0 +1,26 @@
+<div *ngIf="schedules">
+<h3>{{schedules.scheduleName}}</h3>
+<button (click)="delete()" class="delete">
+    delete
+</button>
+
+<button (click)="replace()" class="replace">
+    Replace with current schedule list
+</button>
+
+<button (click)="timetable()" class="timetable">
+    See Timetable
+</button>
+
+<div class="schedules">
+    <ul class="scheduleCodes">
+        <li *ngFor="let code of schedules.codes">
+            <span>subjectCode: </span>{{code.subjectCode}}<br>
+            <span>courseCode: </span>{{code.courseCode}}<br>
+        </li>
+    </ul>
+</div>
+
+</div>
+<app-timetable [courses]="courses"></app-timetable>
+    

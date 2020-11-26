@@ -1,0 +1,41 @@
+button.delete{
+    background-color: rgb(240, 173, 173);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+  }
+  
+button.delete:hover {
+    background-color: #f70000;
+  }
+
+  button.replace{
+    background-color: rgb(173, 240, 206);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+  }
+  
+button.replace:hover {
+    background-color: #3bff4b;
+  }
+
+  button.timetable{
+    background-color: rgb(95, 210, 255);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+  }
+  
+button.timetable:hover {
+    background-color: #286cff;
+  }

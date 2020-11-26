@@ -1,0 +1,28 @@
+li.searchCourses{
+    position: relative;
+    cursor: pointer;
+    background-color: #EEE;
+    margin: .5em;
+    padding: .3em 0;
+    height: 100%;
+    border-radius: 4px;
+    overflow: auto;
+  }
+li.searchCourses:hover {
+    color: #607D8B;
+    background-color: #DDD;
+    left: .1em;
+  }
+  button {
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+  }
+  
+  button:hover {
+    background-color: #cfd8dc;
+  }

@@ -1,0 +1,15 @@
+<h2>Courses</h2>
+<app-courses-search></app-courses-search>
+<ul class="allSubjectCodes">
+    <li *ngFor="let all of allSubjectCodes; index as i" (click)="getClasses(all, i)">
+      <span class="badge">{{all}}</span>
+      <div *ngIf="clickedIndex==i && classes">
+        <ul class="subjectCode">
+            <li *ngFor="let course of classes.subjectCodes" (click)="addToWorkingList(course.courseCode,all)">
+              <span>{{course.courseCode}} {{course.className}}</span>
+
+            </li>
+        </ul>
+      </div>
+    </li>
+</ul>

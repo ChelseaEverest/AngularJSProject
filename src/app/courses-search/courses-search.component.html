@@ -1,0 +1,14 @@
+<div>
+    <label>Search for Courses:
+      <input #subjectCode placeholder="Subject Code"/>
+      <input #courseCode placeholder="Course Code"/>
+      <input #component placeholder="Component"/>
+    </label>
+    <!-- (click) passes input value to add() and then clears the input -->
+    <button (click)="search(subjectCode.value,courseCode.value,component.value)">
+      search
+    </button>
+  </div>
+
+  <app-timetable [courses]="courses"></app-timetable>
+    
