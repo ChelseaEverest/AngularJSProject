@@ -1,4 +1,4 @@
 <h1>{{title}}</h1>
-<app-messages></app-messages>
-<app-schedules (completeReplaceEvent)="completeReplace()" [workingList]="workingList"></app-schedules>
-<app-courses [workingList]="workingList" (replaceEvent)="replaceSchedule($event)"></app-courses>
+<main>
+	<router-outlet></router-outlet>
+</main>

@@ -2,6 +2,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -9,6 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
+import { UserResolver } from './user/user.resolver';
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 import { AppComponent } from './app.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -19,6 +24,9 @@ import { FindScheduleComponent } from './find-schedule/find-schedule.component';
 import { CoursesSearchComponent } from './courses-search/courses-search.component';
 import { TimetableComponent } from './timetable/timetable.component';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { UserComponent } from './user/user.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -27,8 +35,10 @@ import { LoginComponent } from './login/login.component';
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
+    BrowserAnimationsModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
@@ -42,11 +52,13 @@ import { LoginComponent } from './login/login.component';
     FindScheduleComponent,
     CoursesSearchComponent,
     TimetableComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent,
+    UserComponent
   ],
   bootstrap: [ AppComponent ],
   providers: [
-    httpInterceptorProviders
+    httpInterceptorProviders, AuthService, UserService, UserResolver, AuthGuard
   ]
 })
 export class AppModule { }
