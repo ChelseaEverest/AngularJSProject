@@ -16,18 +16,21 @@ export class CoursesSearchComponent implements OnInit {
   ngOnInit(): void {
   }
   search(subjectCode: string,courseCode: string,component: string): void {
-    subjectCode = this.sanitize(subjectCode)
-    subjectCode = subjectCode.trim();
-    courseCode = this.sanitize(courseCode)
-    courseCode = courseCode.trim();
-    component = this.sanitize(component)
-    component = component.trim();
+    subjectCode = this.cleanUpString(subjectCode)
+    console.log(subjectCode)
+    courseCode = this.cleanUpString(courseCode)
+    component = this.cleanUpString(component)
     if (!subjectCode) { return; }
     this.courseService.searchCourses(subjectCode,courseCode,component)
       .subscribe(courses => {
         this.courses = courses;
         console.log(this.courses)
       });
+  }
+  cleanUpString(str: string){
+    this.sanitize(str)
+    str = str.replace(/\s+/g, '');
+    return str.toUpperCase();
   }
   sanitize(string): string {
     const map = {
