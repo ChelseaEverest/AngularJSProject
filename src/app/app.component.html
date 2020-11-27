@@ -1,4 +1,7 @@
 <h1>{{title}}</h1>
 <main>
+	<div *ngIf="_router.url == '/main'">
+		<a href="/login" class="button">Login</a>
+	</div>
 	<router-outlet></router-outlet>
 </main>
