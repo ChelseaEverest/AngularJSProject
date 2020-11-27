@@ -2,6 +2,7 @@ const express = require('express');
 const Joi = require('joi');
 const app = express();
 const fs = require('fs');
+const dljs = require("damerau-levenshtein-js");
 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,17 +37,18 @@ app.get('/api/subjectCodes', (req,res) =>{
     json.subjectCodes = subjectCodes;
     
     for (i=0;i<timetable.length;i++){
+        var classNumber = timetable[i].catalog_nbr;
         var className = timetable[i].className;
         var subject = timetable[i].subject;
         var courseCode = timetable[i].course_info[0].class_nbr;
         var classs = {
+          "classNumber": classNumber,
           "className": className,
           "subject": subject,
           "courseCode": courseCode
         }
         json.subjectCodes.push(classs);
     }
-    console.log(json);
     res.send(json);
 });
 
@@ -64,11 +66,13 @@ app.get('/api/subjectCodes/:subjectCode', (req,res) =>{
     var subjectCode = req.params.subjectCode;
     
     for (i=0;i<timetable.length;i++){
+        var classNumber = timetable[i].catalog_nbr;
         var className = timetable[i].className;
         var subject = timetable[i].subject;
         var courseCode = timetable[i].course_info[0].class_nbr;
         if(subjectCode.localeCompare(subject) == 0){
             var classs = {
+            "classNumber": classNumber,
             "className": className,
             "subject": subject,
             "courseCode": courseCode
@@ -97,10 +101,59 @@ app.get('/api/timetable/:subjectCode', (req,res) =>{
     var subjectCode = req.params.subjectCode;
     
     for (i=0;i<timetable.length;i++){
+        var classNumber = timetable[i].catalog_nbr;
         var className = timetable[i].className;
         var subject = timetable[i].subject;
         if(subjectCode.localeCompare(subject) == 0){
             var classs = {
+                "classNumber": classNumber,
+                "className": className,
+                "subject": subject,
+                "courseInfo": []
+            }
+        
+            for(j=0;j<timetable[i].course_info.length;j++){
+                var courseComponent = timetable[i].course_info[j].ssr_component;
+                var courseCode = timetable[i].course_info[j].class_nbr;
+                var startTime = timetable[i].course_info[j].start_time;
+                var endTime = timetable[i].course_info[j].end_time;
+                var days = timetable[i].course_info[j].days;
+
+                var course_info = {
+                    "courseCode": courseCode,
+                    "component": courseComponent,
+                    "startTime": startTime,
+                    "endTime": endTime,
+                    "days": days
+                }
+                classs.courseInfo.push(course_info);
+            }
+            json.subjectCodes.push(classs);
+        }
+    }
+    if(json.subjectCodes.length == 0){
+        res.status(404).send("The course with the given subject code or course code was not found");
+    }else{
+        res.send(json);
+    }
+});
+
+app.get('/api/keyword/:keyword', (req,res) =>{
+    var json = {};
+    var subjectCodes = []
+    json.subjectCodes = subjectCodes;
+    var keyword = req.params.keyword;
+    
+    for (i=0;i<timetable.length;i++){
+        var classNumber = timetable[i].catalog_nbr;
+        var className = timetable[i].className;
+        str = className.replace(/\s+/g, '');
+        var subject = timetable[i].subject;
+        var classNameDistance = dljs.distance(keyword, str);
+        var classNumberDistance = dljs.distance(keyword, classNumber);
+        if((classNameDistance <= 2 && classNameDistance >= 0) || (classNumberDistance <= 2 && classNumberDistance >= 0)){
+            var classs = {
+                "classNumber": classNumber,
                 "className": className,
                 "subject": subject,
                 "courseInfo": []
@@ -148,9 +201,11 @@ app.get('/api/timetable/:subjectCode/:courseCode', (req,res) =>{
     var courseCodeSent = req.params.courseCode;
     
     for (i=0;i<timetable.length;i++){
+        var classNumber = timetable[i].catalog_nbr;
         var className = timetable[i].className;
         var subject = timetable[i].subject;
         var classs = {
+            "classNumber": classNumber,
             "className": className,
             "subject": subject,
             "courseInfo": []
@@ -204,9 +259,11 @@ app.get('/api/timetable/:subjectCode/:courseCode/:component', (req,res) =>{
     var component = req.params.component;
     
     for (i=0;i<timetable.length;i++){
+        var classNumber = timetable[i].catalog_nbr;
         var className = timetable[i].className;
         var subject = timetable[i].subject;
         var classs = {
+            "classNumber": classNumber,
             "className": className,
             "subject": subject,
             "courseInfo": []
@@ -229,7 +286,6 @@ app.get('/api/timetable/:subjectCode/:courseCode/:component', (req,res) =>{
                     "days": days
                 }
                 classs.courseInfo.push(course_info);
-                console.log(classs);
             }
         }
         if(subjectCode.localeCompare(subject) == 0 && courseCodeSent.localeCompare(courseCode) == 0){
@@ -240,8 +296,6 @@ app.get('/api/timetable/:subjectCode/:courseCode/:component', (req,res) =>{
         res.status(404).send("The course with the given subject code or course code was not found");
     }else{
 
-
-        console.log(json.subjectCodes);
         for(i = 0;i<json.subjectCodes.length;i++){
             for(j=0;j<json.subjectCodes[i].courseInfo.length;j++){
                 if(json.subjectCodes[i].courseInfo[j].component.localeCompare(component) != 0){

@@ -6,7 +6,7 @@
       <div *ngIf="clickedIndex==i && classes">
         <ul class="subjectCode">
             <li *ngFor="let course of classes.subjectCodes" (click)="addToWorkingList(course.courseCode,all)">
-              <span>{{course.courseCode}} {{course.className}}</span>
+              <span>{{course.classNumber}} {{course.courseCode}} {{course.className}}</span>
 
             </li>
         </ul>

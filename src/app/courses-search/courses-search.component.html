@@ -4,8 +4,13 @@
       <input #courseCode placeholder="Course Code"/>
       <input #component placeholder="Component"/>
     </label>
-    <!-- (click) passes input value to add() and then clears the input -->
     <button (click)="search(subjectCode.value,courseCode.value,component.value)">
+      search
+    </button><br>
+    <label>Search for Keyword:
+      <input #keyword placeholder="Keyword"/>
+    </label>
+    <button (click)="searchKeyword(keyword.value)">
       search
     </button>
   </div>

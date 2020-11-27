@@ -3,8 +3,10 @@
   <h3>Last Searched Timetable</h3>
     <ul >
         <li *ngFor="let course of courses.subjectCodes" class="searchCourses">
+          <span class="badge">{{course.classNumber}}: </span>
           <span class="badge">{{course.subject}} - </span>
           <span class="badge">{{course.className}}</span>
+          
             <ul class="indivCourse">
                 <li *ngFor="let info of course.courseInfo">
                   <span>{{info.courseCode}} </span>

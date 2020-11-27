@@ -17,14 +17,21 @@ export class CoursesSearchComponent implements OnInit {
   }
   search(subjectCode: string,courseCode: string,component: string): void {
     subjectCode = this.cleanUpString(subjectCode)
-    console.log(subjectCode)
     courseCode = this.cleanUpString(courseCode)
     component = this.cleanUpString(component)
     if (!subjectCode) { return; }
     this.courseService.searchCourses(subjectCode,courseCode,component)
       .subscribe(courses => {
         this.courses = courses;
-        console.log(this.courses)
+      });
+  }
+  searchKeyword(keyword: string): void {
+    keyword = this.cleanUpString(keyword)
+    if (!keyword) { return; }
+    if (keyword.length <4) {this.courseService.writeNewMessage("keyword must be at least 4 characters");return; }
+    this.courseService.searchKeyword(keyword)
+      .subscribe(courses => {
+        this.courses = courses;
       });
   }
   cleanUpString(str: string){

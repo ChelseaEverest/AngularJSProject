@@ -24,6 +24,7 @@
     "@angular/router": "~10.2.0",
     "angular-in-memory-web-api": "^0.11.0",
     "angularfire2": "^5.4.2",
+    "damerau-levenshtein-js": "^1.1.7",
     "firebase": "^8.1.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

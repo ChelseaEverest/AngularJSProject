@@ -1,5 +1,6 @@
 export interface Course {
     subjectCodes: Array<{
+        classNumber: string,
         className: string,
         subject: string,
         courseInfo?: Array<{

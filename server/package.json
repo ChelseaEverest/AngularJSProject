@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ChelseaEverest/se3316-ceveres4-lab4#readme",
   "dependencies": {
+    "damerau-levenshtein-js": "^1.1.7",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "joi": "^17.3.0"

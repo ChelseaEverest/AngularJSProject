@@ -18,6 +18,7 @@ export class CourseService {
   private allSubjectCodesUrl = 'api/subjectCodes';
   private subjectCodesUrl = 'api/subjectCodes/';
   private timetableUrl = 'api/timetable/';
+  private keywordUrl = 'api/keyword/';
 
   constructor(private http: HttpClient,private messageService: MessageService) { }
 
@@ -50,6 +51,14 @@ export class CourseService {
     );
   }
 
+  searchKeyword(keyword): Observable<Course> {
+    this.messageService.clear();
+    var url = this.keywordUrl.concat(keyword);
+    return this.http.get<Course>(url).pipe(
+      catchError(this.handleError<Course>('searchKeyword'))
+    );
+  }
+
   searchMultipleCourses(schedules:Schedule): Observable<unknown[]> {
     this.messageService.clear();
     var data = [];
@@ -73,6 +82,10 @@ export class CourseService {
     return forkJoin(data);
 
 
+  }
+
+  writeNewMessage(message): void{
+    this.messageService.add(message);
   }
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
