@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router } from "@angular/router";
+import { UpdateSchedule } from './schedule';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeneralService {
+  workingList: UpdateSchedule[] = [];
 
-  constructor(private router: Router) { }
+  constructor() { }
 
-  goToLoginPage(){
-    this.router.navigate(['/login']);
+  addToWorkingList(workingList: UpdateSchedule){
+    console.log(workingList)
+    this.workingList.push(workingList);
   }
-  goToMainPage(){
-    this.router.navigate(['']);
+  clearWorkingList(){
+    this.workingList = [];
   }
 }

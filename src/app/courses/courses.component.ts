@@ -3,6 +3,7 @@ import { Course } from '../course';
 import { UpdateSchedule } from '../schedule';
 import { SubjectCode } from '../subjectCode';
 import { CourseService } from '../course.service';
+import { GeneralService } from '../general.service';
 
 @Component({
   selector: 'app-courses',
@@ -10,13 +11,12 @@ import { CourseService } from '../course.service';
   styleUrls: ['./courses.component.css']
 })
 export class CoursesComponent implements OnInit {
-  @Input() workingList: UpdateSchedule[];
-  @Output() replaceEvent = new EventEmitter<UpdateSchedule[]>();
   allSubjectCodes: string[] = [];
   classes: SubjectCode;
   clickedIndex;
 
-  constructor(private courseService: CourseService) {}
+  constructor(private courseService: CourseService,private generalService: GeneralService) {
+  }
 
   ngOnInit(): void {
     this.getSubjectCodes();
@@ -52,7 +52,7 @@ export class CoursesComponent implements OnInit {
       subjectCode: subjectCode,
       courseCode: courseCode
     };
-    this.workingList.push(schedule)
-    this.replaceEvent.emit(this.workingList);
+    console.log(schedule)
+    this.generalService.addToWorkingList(schedule);
   }
 }

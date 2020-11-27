@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
 import { Schedule } from '../schedule';
 import { ScheduleService } from '../schedule.service';
+import { GeneralService } from '../general.service';
 import { UpdateSchedule } from '../schedule';
 
 
@@ -12,12 +13,13 @@ import { UpdateSchedule } from '../schedule';
 
 
 export class SchedulesComponent implements OnInit {
-  @Input() workingList: UpdateSchedule[];
-  @Output() completeReplaceEvent = new EventEmitter<string>();
+  workingList: UpdateSchedule[];
   allSchedules:[];
   selectedSchedule: Schedule;
 
-  constructor(private scheduleService: ScheduleService) { }
+  constructor(private scheduleService: ScheduleService,private generalService: GeneralService) {
+    this.workingList = generalService.workingList;
+  }
 
   ngOnInit(): void {
     this.getSchedules();
@@ -62,7 +64,8 @@ export class SchedulesComponent implements OnInit {
         .subscribe(schedule => {
           this.getSchedules();
           this.getSpecificSchedule(this.selectedSchedule.scheduleName);
-          this.completeReplaceEvent.emit("");
+          this.generalService.clearWorkingList();
+          this.workingList = this.generalService.workingList;
         });
     }
   }
