@@ -15,16 +15,10 @@ export class UserResolver implements Resolve<FirebaseUserModel> {
     return new Promise((resolve, reject) => {
       this.userService.getCurrentUser()
       .then(res => {
-        if(res.providerData[0].providerId == 'password'){
-          user.name = res.displayName;
-          user.provider = res.providerData[0].providerId;
-          return resolve(user);
-        }
-        else{
-          user.name = res.displayName;
-          user.provider = res.providerData[0].providerId;
-          return resolve(user);
-        }
+        user.name = res.displayName;
+        user.provider = res.providerData[0].providerId;
+        user.emailVerified = res.emailVerified;
+        return resolve(user);
       }, err => {
         this.router.navigate(['/login']);
         return reject(err);

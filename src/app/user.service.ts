@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Resolve, Router } from "@angular/router";
 import * as firebase from 'firebase/app';
 
 @Injectable({
@@ -10,7 +11,8 @@ export class UserService {
 
   constructor(
     public db: AngularFirestore,
-    public afAuth: AngularFireAuth
+    public afAuth: AngularFireAuth, 
+    private router: Router
   ){
   }
  
@@ -38,4 +40,12 @@ export class UserService {
        }, err => reject(err))
      })
    }
+
+  // Send email verfificaiton when new user sign up
+  SendVerificationMail() {
+    return firebase.default.auth().currentUser.sendEmailVerification()
+    .then(() => {
+      this.router.navigate(['/login']);
+    })
+  }
 }

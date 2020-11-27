@@ -4,3 +4,6 @@
 </div>
 
 <h1 class="header">Welcome {{user.name}}!</h1>
+<div *ngIf='user.emailVerified == false'>
+  <button type="submit" (click)="tryVerify()">Verify your email</button>
+</div>

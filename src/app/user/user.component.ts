@@ -15,6 +15,7 @@ import { FirebaseUserModel } from './user.model';
 export class UserComponent implements OnInit {
   user: FirebaseUserModel;
   profileForm: FormGroup;
+  validated: Boolean;
 
   constructor(
     public userService: UserService,
@@ -34,6 +35,7 @@ export class UserComponent implements OnInit {
         this.user = data;
       }
     })
+    this.validated;
 
   }
 
@@ -44,6 +46,10 @@ export class UserComponent implements OnInit {
     }, (error) => {
       console.log("Logout error", error);
     });
+  }
+  tryVerify(){
+    this.userService.SendVerificationMail();
+    this.logout();
   }
 
 }
