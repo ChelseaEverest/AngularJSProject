@@ -323,21 +323,22 @@ app.put('/api/newSchedule', (req,res) =>{
     }
     const schedulesList = schedules.find(c => c.email.localeCompare(body.email) ==0);
     if(schedulesList){
-        const schedule = schedules.find(sch => sch.schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0));
-        if(schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" already exists");
-        else{
-            for(i=0;i<schedules.length;i++){
-                if(schedules[i].email.localeCompare(body.email) ==0){
-                    var newSchedule = {
-                        "scheduleName": body.scheduleName,
-                        "codes": []
-                        }
-                    schedules[i].schedules.push(newSchedule);
-                    updateSchedules();
-                    return res.send(schedules[i]);
-                }
+
+        for(i=0;i<schedules.length;i++){
+            if(schedules[i].email.localeCompare(body.email) ==0){
+                const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
+                if(schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" already exists");
+                var newSchedule = {
+                    "scheduleName": body.scheduleName,
+                    "status": "private",
+                    "codes": []
+                    }
+                schedules[i].schedules.push(newSchedule);
+                updateSchedules();
+                return res.send(schedules[i]);
             }
         }
+        
     }
     else{
         var newSchedule = {
@@ -346,6 +347,7 @@ app.put('/api/newSchedule', (req,res) =>{
         "schedules": [
             {
                 "scheduleName": body.scheduleName,
+                "status": "private",
                 "codes": []
             }
         ]}
@@ -362,81 +364,152 @@ app.put('/api/updateSchedule', (req,res) =>{
         res.status(400).send(error.details[0].message);
         return;
     }
-    const schedule = schedules.find(sch => sch.schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0));
-    if(!schedule) return res.status(404).send("The schedule with name "+body.scheduleName+" does not exist");
-    else{
-        var x,y;
-        for(i=0;i<schedules.length;i++){
-            if(schedules[i].email.localeCompare(body.email) ==0){
-                for(j=0;j<schedules[i].schedules.length;j++){
-                    if(schedules[i].schedules[j].scheduleName.localeCompare(body.scheduleName) ==0){
-                        x = i;
-                        y = j;
-                        schedules[i].schedules[j].codes = [];
-                        for(k=0;k<body.codes.length;k++){
-                            const {error} = validateTimetable({ 
-                                subjectCode: body.codes[k].subjectCode,
-                                courseCode: body.codes[k].courseCode
-                                });
-                            if(error){
-                                res.status(400).send(error.details[0].message);
-                                return;
-                            }
-                            schedules[i].schedules[j].codes.push(body.codes[k]);
+
+    var x,y;
+    for(i=0;i<schedules.length;i++){
+        if(schedules[i].email.localeCompare(body.email) ==0){
+            for(j=0;j<schedules[i].schedules.length;j++){
+                if(schedules[i].schedules[j].scheduleName.localeCompare(body.scheduleName) ==0){
+                    x = i;
+                    y = j;
+                    schedules[i].schedules[j].codes = [];
+                    for(k=0;k<body.codes.length;k++){
+                        const {error} = validateTimetable({ 
+                            subjectCode: body.codes[k].subjectCode,
+                            courseCode: body.codes[k].courseCode
+                            });
+                        if(error){
+                            res.status(400).send(error.details[0].message);
+                            return;
                         }
+                        schedules[i].schedules[j].codes.push(body.codes[k]);
                     }
                 }
             }
         }
-        updateSchedules();
-        return res.send(schedules[x].schedules[y]);
     }
+    updateSchedules();
+    return res.send(schedules[x].schedules[y]);
 });
 
-app.delete('/api/deleteSchedule/:scheduleName', (req,res) =>{
-    const {error} = validateScheduleName({ scheduleName: req.params.scheduleName });//result.error
+app.delete('/api/deleteSchedule', (req,res) =>{
+    var body = req.body;
+    const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
     if(error){
         res.status(400).send(error.details[0].message);
         return;
     }
-    const schedule = schedules.find(c => c.scheduleName.localeCompare(req.params.scheduleName) ==0);
-    if(!schedule) return res.status(404).send("The schedule with name "+req.params.scheduleName+" does not exist");
+    for(i=0;i<schedules.length;i++){
+        if(schedules[i].email.localeCompare(body.email) ==0){
+            const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
+            if(!schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" does not exist");
 
-    const index = schedules.indexOf(schedule);
-    schedules.splice(index,1);
+            const index = schedules[i].schedules.indexOf(schedule);
+            schedules[i].schedules.splice(index,1);
+        
+            updateSchedules();
+            res.send(schedule);
 
-    updateSchedules();
-    res.send(schedule);
+        }
+    }
+
 });
 
 app.delete('/api/deleteAllSchedules', (req,res) =>{
-    schedules = [];
+    var body = req.body;
+    for(i=0;i<schedules.length;i++){
+        if(schedules[i].email.localeCompare(body.email) ==0){
+            
+            schedules[i].schedules = [];
+            updateSchedules();
+            res.send(schedule);
 
-    updateSchedules();
-    res.send(schedules);
+        }
+    }
 });
 
-app.get('/api/specificSchedule/:scheduleName', (req,res) =>{
-    const {error} = validateScheduleName({ scheduleName: req.params.scheduleName });//result.error
+app.put('/api/specificSchedule', (req,res) =>{
+    var body = req.body;
+    const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
     if(error){
         res.status(400).send(error.details[0].message);
         return;
     }
-    const schedule = schedules.find(c => c.scheduleName.localeCompare(req.params.scheduleName) ==0);
-    if(!schedule) return res.status(404).send("The schedule with name "+req.params.scheduleName+" does not exist");
-    return res.send(schedule);
+    for(i=0;i<schedules.length;i++){
+        if(schedules[i].email.localeCompare(body.email) ==0){
+            const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
+            if(!schedule) return res.status(404).send("The schedule with name "+body.scheduleName+" does not exist");
+            return res.send(schedule);
+
+        }
+    }
 });
 
-app.get('/api/allSchedules', (req,res) =>{
+app.put('/api/allSchedules', (req,res) =>{
+    var body = req.body;
     var newSchedule = []
+
     for(i=0;i<schedules.length;i++){
-        var name = schedules[i].scheduleName;
-        var length = schedules[i].codes.length;
-        newSchedule.push(name + ": " + length);
+        if(schedules[i].email.localeCompare(body.email) ==0){
+            for(j=0;j<schedules[i].schedules.length;j++){
+                var name = schedules[i].schedules[j].scheduleName;
+                var length = schedules[i].schedules[j].codes.length;
+                newSchedule.push(name + ": " + length);
+            }
+
+        }
     }
 
     res.send(newSchedule);
 });
+
+app.put('/api/updateScheduleStatus', (req,res) =>{
+    var body = req.body;
+    const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    for(i=0;i<schedules.length;i++){
+        if(schedules[i].email.localeCompare(body.email) ==0){
+            for(j=0;j<schedules[i].schedules.length;j++){
+                if(schedules[i].schedules[j].scheduleName.localeCompare(body.scheduleName) ==0){
+                    var status = schedules[i].schedules[j].status;
+                    if(status.localeCompare("private")==0){
+                        schedules[i].schedules[j].status = "public";
+                    }
+                    else{
+                        schedules[i].schedules[j].status = "private";
+                    }
+                    return res.send(schedules[i]);
+                }
+            }
+
+
+        }
+    }
+});
+
+app.get('/api/allPublicSchedules', (req,res) =>{
+    var allPublicSchedules = [];
+    for(i=0;i<schedules.length;i++){
+        for(j=0;j<schedules[i].schedules.length;j++){
+            var currentSchedule = schedules[i].schedules[j];
+            var status = currentSchedule.status;
+            if(status.localeCompare("public")==0){
+                var newSchedule = {
+                    "username": schedules[i].username,
+                    "scheduleName": currentSchedule.scheduleName,
+                    "codes": currentSchedule.codes   
+                }
+                allPublicSchedules.push(newSchedule);
+            }
+        }
+
+    }
+    return res.send(allPublicSchedules);
+});
+
 
 app.get('/api/allSchedulesAsList', (req,res) =>{
     res.send(schedules);
