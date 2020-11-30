@@ -52,13 +52,15 @@ export class ScheduleService {
       }))
   }
 
-  addSchedule(schedule: string): Observable<Schedules> {
+  addSchedule(schedule: string,description: string): Observable<Schedules> {
     this.messageService.clear();
     var url = this.addScheduleUrl;
     return from(this.userService.getCurrentUser()).pipe(concatMap(
       res => {
+        console.log(description)
         var body = {
           "scheduleName": schedule,
+          "description": description,
           "email": res.email
           }
         return this.http.put<Schedules>(url,body, this.httpOptions).pipe(

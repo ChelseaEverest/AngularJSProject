@@ -12,6 +12,22 @@ button.delete:hover {
     background-color: #f70000;
   }
 
+button.status{
+    background-color: rgb(188, 173, 240);
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+  }
+  
+button.status:hover {
+    background-color: #9400f7;
+  }
+
   button.replace{
     background-color: rgb(173, 240, 206);
     border: none;

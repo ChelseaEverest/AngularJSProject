@@ -1,5 +1,10 @@
 <div *ngIf="schedules">
 <h3>{{schedules.scheduleName}}</h3>
+<h5>Visibility: </h5>
+<button (click)="changeStatus()" class="status">
+    {{schedules.status}}
+</button>
+<h4>{{schedules.description}}</h4>
 <button (click)="delete()" class="delete">
     delete
 </button>

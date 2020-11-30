@@ -32,6 +32,18 @@ export class FindScheduleComponent implements OnInit {
   replace(): void {
     this.replaceEvent.emit("");
   }
+  changeStatus(): void {
+    this.scheduleService.updateScheduleStatus(this.schedules.scheduleName)
+    .subscribe(schedule => {
+      this.updateEvent.emit("");
+      if(this.schedules.status.localeCompare("private")==0){
+        this.schedules.status = "public";
+      }
+      else{
+        this.schedules.status = "private";
+      }
+    });
+  }
   timetable(): void {
 
     this.courseService.searchMultipleCourses(this.schedules)

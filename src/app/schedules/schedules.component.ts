@@ -38,11 +38,12 @@ export class SchedulesComponent implements OnInit {
     .subscribe(schedules => {
       this.selectedSchedule = schedules});
   }
-  add(name: string): void {
+  add(name: string,description: string): void {
     name = this.sanitize(name);
+    description = this.sanitize(description);
     name = name.trim();
     if (!name) { return; }
-    this.scheduleService.addSchedule(name)
+    this.scheduleService.addSchedule(name,description)
       .subscribe(schedule => {
         this.getSchedules();
       });

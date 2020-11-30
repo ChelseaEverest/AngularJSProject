@@ -328,14 +328,21 @@ app.put('/api/newSchedule', (req,res) =>{
             if(schedules[i].email.localeCompare(body.email) ==0){
                 const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
                 if(schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" already exists");
-                var newSchedule = {
-                    "scheduleName": body.scheduleName,
-                    "status": "private",
-                    "codes": []
-                    }
-                schedules[i].schedules.push(newSchedule);
-                updateSchedules();
-                return res.send(schedules[i]);
+                if(schedules[i].schedules.length <20){
+
+                    var newSchedule = {
+                        "scheduleName": body.scheduleName,
+                        "status": "private",
+                        "description":body.description,
+                        "codes": []
+                        }
+                    schedules[i].schedules.push(newSchedule);
+                    updateSchedules();
+                    return res.send(schedules[i]);
+                }
+                else{
+                    res.status(400).send("Maximum number of schedules reached");
+                }
             }
         }
         
@@ -348,6 +355,7 @@ app.put('/api/newSchedule', (req,res) =>{
             {
                 "scheduleName": body.scheduleName,
                 "status": "private",
+                "description":body.description,
                 "codes": []
             }
         ]}
@@ -466,6 +474,7 @@ app.put('/api/allSchedules', (req,res) =>{
 
 app.put('/api/updateScheduleStatus', (req,res) =>{
     var body = req.body;
+    console.log(body)
     const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
     if(error){
         res.status(400).send(error.details[0].message);

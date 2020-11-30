@@ -8,7 +8,10 @@
   <label>New Schedule:
     <input #newSchedule />
   </label>
-  <button (click)="add(newSchedule.value)">
+  <label>(Optional) Description:
+    <input #description />
+  </label>
+  <button (click)="add(newSchedule.value,description.value)">
     add
   </button>
 </div>

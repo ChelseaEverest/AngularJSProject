@@ -4,6 +4,7 @@ export interface Schedules {
   schedules:Array<{
     scheduleName:string,
     status:string,
+    description:string,
     codes:Array<{
       subjectCode:string,
       courseCode:string
@@ -13,6 +14,7 @@ export interface Schedules {
   export interface Schedule {
       scheduleName:string,
       status:string,
+      description:string,
       codes:Array<{
         subjectCode:string,
         courseCode:string
