@@ -1,27 +1,26 @@
-<div *ngIf="schedules">
-<h3>{{schedules.scheduleName}}</h3>
+<div *ngIf="selectedSchedule">
+<h3>{{selectedSchedule.scheduleName}}</h3>
 <h5>Visibility: </h5>
 <button (click)="changeStatus()" class="status">
-    {{schedules.status}}
+    {{selectedSchedule.status}}
 </button>
-<h4>{{schedules.description}}</h4>
+<h4>{{selectedSchedule.description}}</h4>
 <button (click)="delete()" class="delete">
     delete
-</button>
-
-<button (click)="replace()" class="replace">
-    Replace with current schedule list
 </button>
 
 <button (click)="timetable()" class="timetable">
     See Timetable
 </button>
 
-<div class="schedules">
+<div class="selectedSchedule">
     <ul class="scheduleCodes">
-        <li *ngFor="let code of schedules.codes">
+        <li *ngFor="let code of selectedSchedule.codes">
             <span>subjectCode: </span>{{code.subjectCode}}<br>
             <span>courseCode: </span>{{code.courseCode}}<br>
+            <button (click)="deleteCourse(code)" class="delete">
+                X
+            </button>
         </li>
     </ul>
 </div>

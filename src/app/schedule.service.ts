@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Schedule,Schedules,PublicSchedule } from './schedule';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of, from, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, concatMap } from 'rxjs/operators';
 import { MessageService } from './message.service';
@@ -22,7 +22,18 @@ export class ScheduleService {
   private updateScheduleStatusUrl = 'api/updateScheduleStatus';
   private allPublicSchedulesUrl = 'api/allPublicSchedules';
 
-  constructor(public userService: UserService,private http: HttpClient,private messageService: MessageService) { }
+  selectedSchedule: Schedule;
+  selectedScheduleChange: Subject<Schedule> = new Subject<Schedule>();
+
+  constructor(public userService: UserService,private http: HttpClient,private messageService: MessageService) {
+    this.selectedScheduleChange.subscribe((value) => {
+      this.selectedSchedule = value
+    });
+   }
+
+   newSelectedSchedule(selectedSchedule: Schedule){
+    this.selectedScheduleChange.next(selectedSchedule);
+   }
 
   getSchedule(findSchedule): Observable<Schedule> {
     this.messageService.clear();

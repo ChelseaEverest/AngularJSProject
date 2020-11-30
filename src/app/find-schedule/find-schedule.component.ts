@@ -10,43 +10,43 @@ import { CourseService } from '../course.service';
   styleUrls: ['./find-schedule.component.css']
 })
 export class FindScheduleComponent implements OnInit {
-  @Input() schedules: Schedule;
+  
   @Output() updateEvent = new EventEmitter<string>(); 
-  @Output() replaceEvent = new EventEmitter<string>();
 
+  selectedSchedule: Schedule;
   courses: Course;
 
-  constructor(private scheduleService: ScheduleService,private courseService: CourseService) { }
+  constructor(private scheduleService: ScheduleService,private courseService: CourseService) {
+    this.selectedSchedule = scheduleService.selectedSchedule;
+    this.scheduleService.selectedScheduleChange.subscribe(value => this.selectedSchedule = value);
+   }
 
   ngOnInit(): void {
   }
   delete(): void {
-    var name = this.schedules.scheduleName;
+    var name = this.selectedSchedule.scheduleName;
     if (!name) { return; }
     this.scheduleService.deleteSchedule(name)
       .subscribe(schedule => {
         this.updateEvent.emit("");
-        this.schedules = undefined;
+        this.selectedSchedule = undefined;
       });
   }
-  replace(): void {
-    this.replaceEvent.emit("");
-  }
   changeStatus(): void {
-    this.scheduleService.updateScheduleStatus(this.schedules.scheduleName)
+    this.scheduleService.updateScheduleStatus(this.selectedSchedule.scheduleName)
     .subscribe(schedule => {
       this.updateEvent.emit("");
-      if(this.schedules.status.localeCompare("private")==0){
-        this.schedules.status = "public";
+      if(this.selectedSchedule.status.localeCompare("private")==0){
+        this.selectedSchedule.status = "public";
       }
       else{
-        this.schedules.status = "private";
+        this.selectedSchedule.status = "private";
       }
     });
   }
   timetable(): void {
 
-    this.courseService.searchMultipleCourses(this.schedules)
+    this.courseService.searchMultipleCourses(this.selectedSchedule)
         .subscribe(courses => {
           this.courses = <Course> courses[0];
           for (var i = 1; i < courses.length; i++){
@@ -54,6 +54,19 @@ export class FindScheduleComponent implements OnInit {
           }
       });
   
+  }
+  deleteCourse(code){
+    for (var i = 0;i<this.selectedSchedule.codes.length;i++){
+      if(this.selectedSchedule.codes[i] == code){
+        this.selectedSchedule.codes.splice(i, 1);
+      }
+    }
+    this.scheduleService.updateSchedule(this.selectedSchedule.scheduleName,this.selectedSchedule.codes)
+        .subscribe(schedule => {
+          this.updateEvent.emit("");
+          this.scheduleService.newSelectedSchedule(this.selectedSchedule);
+        });
+
   }
 
 }

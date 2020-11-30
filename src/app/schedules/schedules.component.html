@@ -22,13 +22,4 @@
     </li>
   </ul>
 
-<app-find-schedule [schedules]="selectedSchedule" (replaceEvent)="replaceSchedules()" (updateEvent)="getSchedules()" ></app-find-schedule>
-<div *ngIf="workingList">
-  <h3>Current Schedule List</h3>
-  <ul>
-      <li *ngFor="let listItem of workingList">
-        <span>{{listItem.courseCode}} {{listItem.subjectCode}}</span>
-
-      </li>
-  </ul>
-</div>
+<app-find-schedule (updateEvent)="getSchedules()" ></app-find-schedule>
