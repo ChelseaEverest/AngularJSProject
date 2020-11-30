@@ -392,17 +392,18 @@ app.put('/api/updateSchedule', (req,res) =>{
     return res.send(schedules[x].schedules[y]);
 });
 
-app.delete('/api/deleteSchedule', (req,res) =>{
-    var body = req.body;
-    const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
+app.delete('/api/deleteSchedule/:email/:scheduleName', (req,res) =>{
+    var scheduleName =  req.params.scheduleName;
+    var email = req.params.email;
+    const {error} = validateScheduleName({ scheduleName: scheduleName });//result.error
     if(error){
         res.status(400).send(error.details[0].message);
         return;
     }
     for(i=0;i<schedules.length;i++){
-        if(schedules[i].email.localeCompare(body.email) ==0){
-            const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
-            if(!schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" does not exist");
+        if(schedules[i].email.localeCompare(email) ==0){
+            const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(scheduleName) ==0);
+            if(!schedule) return res.status(400).send("The schedule with name "+scheduleName+" does not exist");
 
             const index = schedules[i].schedules.indexOf(schedule);
             schedules[i].schedules.splice(index,1);
@@ -415,14 +416,14 @@ app.delete('/api/deleteSchedule', (req,res) =>{
 
 });
 
-app.delete('/api/deleteAllSchedules', (req,res) =>{
-    var body = req.body;
+app.delete('/api/deleteAllSchedules/:email', (req,res) =>{
+    var email = req.params.email;
     for(i=0;i<schedules.length;i++){
-        if(schedules[i].email.localeCompare(body.email) ==0){
+        if(schedules[i].email.localeCompare(email) ==0){
             
             schedules[i].schedules = [];
             updateSchedules();
-            res.send(schedule);
+            res.send(schedules[i]);
 
         }
     }

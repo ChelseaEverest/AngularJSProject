@@ -1,75 +1,92 @@
 import { Injectable } from '@angular/core';
-import { Schedule } from './schedule';
-import { Observable, of } from 'rxjs';
+import { Schedule,Schedules,PublicSchedule } from './schedule';
+import { Observable, of, from } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, concatMap } from 'rxjs/operators';
 import { MessageService } from './message.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScheduleService {
-  schedule: Schedule = {
-    scheduleName:"TestSchedule",
-    codes:[
-        {
-            subjectCode:"TESTCODE",
-            courseCode:"1111"
-        },
-        {
-          subjectCode:"TESTCODE2",
-          courseCode:"2222"
-      }
-    ]
-  };
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
   private allSchedulesUrl = 'api/allSchedules';
-  private findScheduleUrl = 'api/specificSchedule/';
-  private addScheduleUrl = 'api/newSchedule/';
+  private findScheduleUrl = 'api/specificSchedule';
+  private addScheduleUrl = 'api/newSchedule';
   private deleteScheduleUrl = 'api/deleteSchedule/';
-  private deleteAllSchedulesUrl = 'api/deleteAllSchedules';
-  private updateScheduleUrl = 'api/updateSchedule/';
+  private deleteAllSchedulesUrl = 'api/deleteAllSchedules/';
+  private updateScheduleUrl = 'api/updateSchedule';
+  private updateScheduleStatusUrl = 'api/updateScheduleStatus';
+  private allPublicSchedulesUrl = 'api/allPublicSchedules';
 
-  constructor(private http: HttpClient,private messageService: MessageService) { }
+  constructor(public userService: UserService,private http: HttpClient,private messageService: MessageService) { }
 
   getSchedule(findSchedule): Observable<Schedule> {
     this.messageService.clear();
-    var url = this.findScheduleUrl.concat(findSchedule);
-    return this.http.get<Schedule>(url).pipe(
-      catchError(this.handleError<Schedule>('getSchedule'))
-    );
+    var url = this.findScheduleUrl;
+
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var body = {
+          "scheduleName": findSchedule,
+          "email": res.email
+          }
+        return this.http.put<Schedule>(url,body, this.httpOptions).pipe(
+          catchError(this.handleError<Schedule>('getSchedule'))
+        );
+      }))
   }
   getSchedules(): Observable<[]> {
     this.messageService.clear();
-    return this.http.get<[]>(this.allSchedulesUrl).pipe(
-      catchError(this.handleError<[]>('getSchedules'))
-    );
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var body = {
+          "email": res.email
+          }
+        return this.http.put<[]>(this.allSchedulesUrl,body, this.httpOptions).pipe(
+          catchError(this.handleError<[]>('getSchedules'))
+        );
+      }))
   }
 
-  addSchedule(schedule: string): Observable<Schedule> {
+  addSchedule(schedule: string): Observable<Schedules> {
     this.messageService.clear();
-    var url = this.addScheduleUrl.concat(schedule);
-    return this.http.put<Schedule>(url, this.httpOptions).pipe(
-      catchError(this.handleError<Schedule>('addSchedule')),
-      
-    );
+    var url = this.addScheduleUrl;
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var body = {
+          "scheduleName": schedule,
+          "email": res.email
+          }
+        return this.http.put<Schedules>(url,body, this.httpOptions).pipe(
+          catchError(this.handleError<Schedules>('addSchedule'))
+        );
+      }))
   }
 
   deleteSchedule(schedule: string): Observable<Schedule> {
     this.messageService.clear();
-    var url = this.deleteScheduleUrl.concat(schedule);
-    return this.http.delete<Schedule>(url, this.httpOptions).pipe(
-      catchError(this.handleError<Schedule>('deleteSchedule'))
-    );
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var url = this.deleteScheduleUrl.concat(res.email + "/" +schedule);
+        return this.http.delete<Schedule>(url, this.httpOptions).pipe(
+          catchError(this.handleError<Schedule>('deleteSchedule'))
+        );
+      }))
   }
 
-  deleteAllSchedules(): Observable<Schedule> {
+  deleteAllSchedules(): Observable<Schedules> {
     this.messageService.clear();
-    return this.http.delete<Schedule>(this.deleteAllSchedulesUrl, this.httpOptions).pipe(
-      catchError(this.handleError<Schedule>('deleteSchedule'))
-    );
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var url = this.deleteAllSchedulesUrl.concat(res.email);
+        return this.http.delete<Schedules>(url, this.httpOptions).pipe(
+          catchError(this.handleError<Schedules>('deleteAllSchedules'))
+        );
+      }))
   }
 
   writeNewMessage(message): void{
@@ -78,10 +95,43 @@ export class ScheduleService {
 
   updateSchedule(schedule: string, workingList): Observable<Schedule> {
     this.messageService.clear();
-    var url = this.updateScheduleUrl.concat(schedule);
-    return this.http.put<Schedule>(url,workingList, this.httpOptions).pipe(
-      catchError(this.handleError<Schedule>('updateSchedule')),
-      
+    var url = this.updateScheduleUrl;
+
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var body = {
+          "scheduleName": schedule,
+          "email": res.email,
+          "codes": workingList
+          }
+        return this.http.put<Schedule>(url,body, this.httpOptions).pipe(
+          catchError(this.handleError<Schedule>('updateSchedule'))
+        );
+      }))
+  }
+
+  updateScheduleStatus(schedule: string): Observable<Schedules> {
+    this.messageService.clear();
+    var url = this.updateScheduleStatusUrl;
+
+    return from(this.userService.getCurrentUser()).pipe(concatMap(
+      res => {
+        var body = {
+          "scheduleName": schedule,
+          "email": res.email
+          }
+        return this.http.put<Schedules>(url,body, this.httpOptions).pipe(
+          catchError(this.handleError<Schedules>('updateScheduleStatus'))
+        );
+      }))
+  }
+
+  allPublicSchedules(): Observable<PublicSchedule> {
+    this.messageService.clear();
+    var url = this.allPublicSchedulesUrl;
+
+    return this.http.get<PublicSchedule>(url).pipe(
+      catchError(this.handleError<PublicSchedule>('allPublicSchedules'))
     );
   }
 
