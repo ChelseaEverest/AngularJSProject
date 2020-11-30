@@ -5,8 +5,11 @@
       <span class="badge">{{all}}</span>
       <div *ngIf="clickedIndex==i && classes">
         <ul class="subjectCode">
-            <li *ngFor="let course of classes.subjectCodes" (click)="addToWorkingList(course.courseCode,all)">
+            <li *ngFor="let course of classes.subjectCodes">
               <span>{{course.classNumber}} {{course.courseCode}} {{course.className}}</span>
+              <button (click)="addCourse(course.courseCode,all)" class="add">
+                +
+              </button>
 
             </li>
         </ul>

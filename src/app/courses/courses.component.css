@@ -13,3 +13,17 @@
     background-color: #DDD;
     left: .1em;
   }
+button.add{
+    background-color: rgb(173, 240, 206);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: hand;
+    font-family: Arial;
+    float: right;
+  }
+  
+button.add:hover {
+    background-color: #3bff4b;
+  }

@@ -3,7 +3,7 @@ import { Course } from '../course';
 import { UpdateSchedule } from '../schedule';
 import { SubjectCode } from '../subjectCode';
 import { CourseService } from '../course.service';
-import { GeneralService } from '../general.service';
+import { ScheduleService } from '../schedule.service';
 
 @Component({
   selector: 'app-courses',
@@ -15,7 +15,7 @@ export class CoursesComponent implements OnInit {
   classes: SubjectCode;
   clickedIndex;
 
-  constructor(private courseService: CourseService,private generalService: GeneralService) {
+  constructor(private courseService: CourseService,private scheduleService: ScheduleService) {
   }
 
   ngOnInit(): void {
@@ -47,12 +47,18 @@ export class CoursesComponent implements OnInit {
     subjectCode: "",
     courseCode: ""
   };
-  addToWorkingList(courseCode, subjectCode): void{
+
+  addCourse(courseCode, subjectCode): void{
     let schedule: UpdateSchedule = {
       subjectCode: subjectCode,
       courseCode: courseCode
     };
-    console.log(schedule)
-    this.generalService.addToWorkingList(schedule);
+    var selectedSchedule = this.scheduleService.selectedSchedule
+    selectedSchedule.codes.push(schedule)
+
+    this.scheduleService.updateSchedule(selectedSchedule.scheduleName,selectedSchedule.codes)
+      .subscribe(schedule => {
+        this.scheduleService.newSelectedSchedule(selectedSchedule);
+      });
   }
 }
