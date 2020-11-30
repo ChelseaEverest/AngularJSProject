@@ -1,1 +1,1 @@
-[{"email":"test@tester.com","schedules":[{"scheduleName":"Apple","status":"public","description":"","codes":[{"subjectCode":"ACTURSCI","courseCode":5538},{"subjectCode":"ACTURSCI","courseCode":1494},{"subjectCode":"ACTURSCI","courseCode":1715}]}]}]
+[{"email":"test@tester.com","schedules":[{"scheduleName":"Apple","status":"public","description":"","codes":[{"subjectCode":"ACTURSCI","courseCode":1715},{"subjectCode":"ACTURSCI","courseCode":2815},{"subjectCode":"BIBLSTUD","courseCode":8121}]}]}]

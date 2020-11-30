@@ -20,7 +20,9 @@ export class SchedulesComponent implements OnInit {
   constructor(private scheduleService: ScheduleService,private generalService: GeneralService) {
     this.workingList = generalService.workingList;
     this.selectedSchedule = scheduleService.selectedSchedule;
-    this.scheduleService.selectedScheduleChange.subscribe(value => this.selectedSchedule = value);
+    this.scheduleService.selectedScheduleChange.subscribe(value => {
+      this.getSchedules()
+      this.selectedSchedule = value});
   }
 
   ngOnInit(): void {
