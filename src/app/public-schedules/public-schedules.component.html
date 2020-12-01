@@ -1,1 +1,6 @@
 <p>public-schedules works!</p>
+<ul class="publicSchedules">
+    <li *ngFor="let all of publicSchedules; index as i">
+      <span class="badge">{{all.username}}'s Schedule: {{all.scheduleName}}</span>
+    </li>
+</ul>

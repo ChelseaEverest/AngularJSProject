@@ -68,11 +68,12 @@ export class ScheduleService {
     var url = this.addScheduleUrl;
     return from(this.userService.getCurrentUser()).pipe(concatMap(
       res => {
-        console.log(description)
+        console.log(res)
         var body = {
           "scheduleName": schedule,
           "description": description,
-          "email": res.email
+          "email": res.email,
+          "username": res.displayName
           }
         return this.http.put<Schedules>(url,body, this.httpOptions).pipe(
           catchError(this.handleError<Schedules>('addSchedule'))

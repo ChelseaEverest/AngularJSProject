@@ -4,6 +4,7 @@
 	<div *ngIf="_router.url == '/main'">
 		<a href="/login" class="button">Login</a>
 		<p>Welcome to the timetable website I created. Please log in to have additional features. You can see available courses and search courses. </p>
+		<app-public-schedules></app-public-schedules>
 	</div>
 	<router-outlet></router-outlet>
 </main>

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PublicSchedule } from '../schedule';
+import { ScheduleService } from '../schedule.service';
 
 @Component({
   selector: 'app-public-schedules',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PublicSchedulesComponent implements OnInit {
 
-  constructor() { }
+  publicSchedules: PublicSchedule;
+
+  constructor(private scheduleService: ScheduleService) { }
 
   ngOnInit(): void {
+    this.getPublicSchedules();
+  }
+
+  getPublicSchedules(): void {
+
+    this.scheduleService.allPublicSchedules()
+        .subscribe(schedules => {
+          console.log(schedules)
+          this.publicSchedules = schedules;
+      });
   }
 
 }

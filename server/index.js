@@ -519,9 +519,11 @@ app.get('/api/allPublicSchedules', (req,res) =>{
             var currentSchedule = schedules[i].schedules[j];
             var status = currentSchedule.status;
             if(status.localeCompare("public")==0){
+                console.log(schedules[i])
                 var newSchedule = {
                     "username": schedules[i].username,
                     "scheduleName": currentSchedule.scheduleName,
+                    "lastModified": currentSchedule.lastModified,
                     "codes": currentSchedule.codes   
                 }
                 allPublicSchedules.push(newSchedule);

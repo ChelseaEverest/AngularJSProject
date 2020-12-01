@@ -29,6 +29,7 @@ export interface UpdateSchedule {
 export interface PublicSchedule {
   username:string,
   scheduleName:string,
+  lastModified:string,
   codes:Array<{
     subjectCode:string,
     courseCode:string
