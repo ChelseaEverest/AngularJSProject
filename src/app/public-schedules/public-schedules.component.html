@@ -1,6 +1,21 @@
-<p>public-schedules works!</p>
-<ul class="publicSchedules">
-    <li *ngFor="let all of publicSchedules; index as i">
-      <span class="badge">{{all.username}}'s Schedule: {{all.scheduleName}}</span>
+<h2>Public Schedules by Users</h2>
+<ol class="publicSchedules">
+    <li *ngFor="let all of publicSchedules; index as i" (click)="getCourseList(all, i)">
+        <h3>{{all.username}}</h3>
+        <h4>{{all.scheduleName}}</h4>
+        <div *ngIf="clickedIndex==i && clickedSchedule">
+            <div *ngIf="clickedSchedule.description">
+                <h5>Description: {{clickedSchedule.description}}</h5>
+            </div>
+            <ul>
+                <li *ngFor="let code of clickedSchedule.codes">
+                    <span>subjectCode: </span>{{code.subjectCode}}<br>
+                    <span>courseCode: </span>{{code.courseCode}}<br>
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="!(clickedIndex==i && clickedSchedule)">
+            <span class="badge">Number of courses in this schedule: {{all.codes.length}}</span>
+        </div>
     </li>
-</ul>
+</ol>

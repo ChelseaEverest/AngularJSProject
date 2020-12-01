@@ -140,12 +140,12 @@ export class ScheduleService {
       }))
   }
 
-  allPublicSchedules(): Observable<PublicSchedule> {
+  allPublicSchedules(): Observable<PublicSchedule[]> {
     this.messageService.clear();
     var url = this.allPublicSchedulesUrl;
 
-    return this.http.get<PublicSchedule>(url).pipe(
-      catchError(this.handleError<PublicSchedule>('allPublicSchedules'))
+    return this.http.get<PublicSchedule[]>(url).pipe(
+      catchError(this.handleError<PublicSchedule[]>('allPublicSchedules'))
     );
   }
 

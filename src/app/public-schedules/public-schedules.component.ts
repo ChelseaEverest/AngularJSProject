@@ -9,7 +9,9 @@ import { ScheduleService } from '../schedule.service';
 })
 export class PublicSchedulesComponent implements OnInit {
 
-  publicSchedules: PublicSchedule;
+  publicSchedules: PublicSchedule[];
+  clickedSchedule: PublicSchedule;
+  clickedIndex;
 
   constructor(private scheduleService: ScheduleService) { }
 
@@ -24,6 +26,13 @@ export class PublicSchedulesComponent implements OnInit {
           console.log(schedules)
           this.publicSchedules = schedules;
       });
+  }
+
+  getCourseList(subjectName , index): void {
+    console.log(index)
+    this.clickedIndex = index;
+    this.clickedSchedule = this.publicSchedules[index]
+    
   }
 
 }

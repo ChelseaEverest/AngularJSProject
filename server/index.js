@@ -524,6 +524,7 @@ app.get('/api/allPublicSchedules', (req,res) =>{
                     "username": schedules[i].username,
                     "scheduleName": currentSchedule.scheduleName,
                     "lastModified": currentSchedule.lastModified,
+                    "description": currentSchedule.description,
                     "codes": currentSchedule.codes   
                 }
                 allPublicSchedules.push(newSchedule);
