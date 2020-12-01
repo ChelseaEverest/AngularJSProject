@@ -4,6 +4,11 @@
         <h3>{{all.username}}</h3>
         <h4>{{all.scheduleName}}</h4>
         <div *ngIf="clickedIndex==i && clickedSchedule">
+            <div *ngIf="!courses">
+                <button (click)="timetable(i)" class="timetable">
+                    See Timetable
+                </button>
+            </div>
             <div *ngIf="clickedSchedule.description">
                 <h5>Description: {{clickedSchedule.description}}</h5>
             </div>
@@ -13,6 +18,12 @@
                     <span>courseCode: </span>{{code.courseCode}}<br>
                 </li>
             </ul>
+            <div *ngIf="courses">
+                <button (click)="closeTimetable(i)" class="delete">
+                    X
+                </button>
+                <app-timetable [courses]="courses"></app-timetable>
+            </div>
         </div>
         <div *ngIf="!(clickedIndex==i && clickedSchedule)">
             <span class="badge">Number of courses in this schedule: {{all.codes.length}}</span>

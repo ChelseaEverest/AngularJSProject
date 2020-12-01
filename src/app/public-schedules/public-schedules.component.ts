@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PublicSchedule } from '../schedule';
+import { PublicSchedule,Schedule } from '../schedule';
+import { Course } from '../course';
 import { ScheduleService } from '../schedule.service';
+import { CourseService } from '../course.service';
 
 @Component({
   selector: 'app-public-schedules',
@@ -12,8 +14,9 @@ export class PublicSchedulesComponent implements OnInit {
   publicSchedules: PublicSchedule[];
   clickedSchedule: PublicSchedule;
   clickedIndex;
+  courses: Course;
 
-  constructor(private scheduleService: ScheduleService) { }
+  constructor(private scheduleService: ScheduleService,private courseService: CourseService) { }
 
   ngOnInit(): void {
     this.getPublicSchedules();
@@ -37,5 +40,28 @@ export class PublicSchedulesComponent implements OnInit {
       this.clickedIndex = index;
       this.clickedSchedule = this.publicSchedules[index]
     }
+  }
+
+  timetable(index): void {
+    var schedule: Schedule = {
+      scheduleName:this.clickedSchedule.scheduleName,
+      status:"public",
+      description:this.clickedSchedule.description,
+      lastModified:this.clickedSchedule.lastModified,
+      codes: this.clickedSchedule.codes
+    };
+
+    this.courseService.searchMultipleCourses(schedule)
+        .subscribe(courses => {
+          this.courses = <Course> courses[0];
+          for (var i = 1; i < courses.length; i++){
+            this.courses.subjectCodes = this.courses.subjectCodes.concat((<Course>courses[i]).subjectCodes);
+          }
+      });
+      this.getCourseList(index);
+  }
+  closeTimetable(index){
+    this.courses = undefined;
+    this.getCourseList(index);
   }
 }
