@@ -27,6 +27,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PublicSchedulesComponent } from './public-schedules/public-schedules.component';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TimetableComponent,
     LoginComponent,
     RegisterComponent,
-    UserComponent
+    UserComponent,
+    PublicSchedulesComponent
   ],
   bootstrap: [ AppComponent ],
   providers: [

@@ -5,6 +5,7 @@ export interface Schedules {
     scheduleName:string,
     status:string,
     description:string,
+    lastModified:string,
     codes:Array<{
       subjectCode:string,
       courseCode:string
@@ -15,6 +16,7 @@ export interface Schedules {
       scheduleName:string,
       status:string,
       description:string,
+      lastModified:string,
       codes:Array<{
         subjectCode:string,
         courseCode:string

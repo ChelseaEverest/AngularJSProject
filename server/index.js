@@ -316,6 +316,10 @@ app.get('/api/timetable/:subjectCode/:courseCode/:component', (req,res) =>{
 
 app.put('/api/newSchedule', (req,res) =>{
     var body = req.body;
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
     const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
     if(error){
         res.status(400).send(error.details[0].message);
@@ -334,6 +338,7 @@ app.put('/api/newSchedule', (req,res) =>{
                         "scheduleName": body.scheduleName,
                         "status": "private",
                         "description":body.description,
+                        "lastModified":dateTime,
                         "codes": []
                         }
                     schedules[i].schedules.push(newSchedule);
@@ -348,6 +353,7 @@ app.put('/api/newSchedule', (req,res) =>{
         
     }
     else{
+        
         var newSchedule = {
         "email": body.email,
         "username": body.username,
@@ -356,6 +362,7 @@ app.put('/api/newSchedule', (req,res) =>{
                 "scheduleName": body.scheduleName,
                 "status": "private",
                 "description":body.description,
+                "lastModified":dateTime,
                 "codes": []
             }
         ]}
@@ -367,6 +374,10 @@ app.put('/api/newSchedule', (req,res) =>{
 
 app.put('/api/updateSchedule', (req,res) =>{
     var body = req.body;
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
     const {error} = validateScheduleName({ scheduleName: body.scheduleName });//result.error
     if(error){
         res.status(400).send(error.details[0].message);
@@ -390,6 +401,7 @@ app.put('/api/updateSchedule', (req,res) =>{
                             res.status(400).send(error.details[0].message);
                             return;
                         }
+                        schedules[i].schedules[j].lastModified = dateTime
                         schedules[i].schedules[j].codes.push(body.codes[k]);
                     }
                 }
