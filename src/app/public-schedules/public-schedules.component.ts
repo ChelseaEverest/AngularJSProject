@@ -28,11 +28,14 @@ export class PublicSchedulesComponent implements OnInit {
       });
   }
 
-  getCourseList(subjectName , index): void {
-    console.log(index)
-    this.clickedIndex = index;
-    this.clickedSchedule = this.publicSchedules[index]
-    
+  getCourseList(index): void {
+    if(this.clickedSchedule && this.clickedIndex==index){
+      this.clickedIndex = undefined;
+      this.clickedSchedule = undefined;
+    }
+    else{
+      this.clickedIndex = index;
+      this.clickedSchedule = this.publicSchedules[index]
+    }
   }
-
 }

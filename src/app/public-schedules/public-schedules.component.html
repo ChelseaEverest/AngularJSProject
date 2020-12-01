@@ -1,6 +1,6 @@
 <h2>Public Schedules by Users</h2>
 <ol class="publicSchedules">
-    <li *ngFor="let all of publicSchedules; index as i" (click)="getCourseList(all, i)">
+    <li *ngFor="let all of publicSchedules; index as i" (click)="getCourseList(i)">
         <h3>{{all.username}}</h3>
         <h4>{{all.scheduleName}}</h4>
         <div *ngIf="clickedIndex==i && clickedSchedule">
