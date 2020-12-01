@@ -519,7 +519,6 @@ app.get('/api/allPublicSchedules', (req,res) =>{
             var currentSchedule = schedules[i].schedules[j];
             var status = currentSchedule.status;
             if(status.localeCompare("public")==0){
-                console.log(schedules[i])
                 var newSchedule = {
                     "username": schedules[i].username,
                     "scheduleName": currentSchedule.scheduleName,
@@ -528,6 +527,8 @@ app.get('/api/allPublicSchedules', (req,res) =>{
                     "codes": currentSchedule.codes   
                 }
                 allPublicSchedules.push(newSchedule);
+                allPublicSchedules.sort(function(a, b){return Date.parse(b.lastModified)-Date.parse(a.lastModified)});
+                console.log(allPublicSchedules)
             }
         }
 

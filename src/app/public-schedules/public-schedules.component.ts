@@ -24,7 +24,7 @@ export class PublicSchedulesComponent implements OnInit {
     this.scheduleService.allPublicSchedules()
         .subscribe(schedules => {
           console.log(schedules)
-          this.publicSchedules = schedules;
+          this.publicSchedules = schedules.slice(0,10);
       });
   }
 
