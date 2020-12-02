@@ -24,11 +24,19 @@ let timetable = JSON.parse(rawdata);
 app.use(express.json());
 
 let rawschedules = fs.readFileSync('schedules.json')
-
 let schedules = JSON.parse(rawschedules);
+
+let rawreviews = fs.readFileSync('reviews.json')
+let reviews = JSON.parse(rawreviews);
 
 function updateSchedules(){
     fs.writeFile('schedules.json', JSON.stringify(schedules), function (err) {
+        if (err) throw err;
+      });
+}
+
+function updateReviews(){
+    fs.writeFile('reviews.json', JSON.stringify(reviews), function (err) {
         if (err) throw err;
       });
 }
@@ -544,6 +552,56 @@ app.get('/api/allPublicSchedules', (req,res) =>{
 
 app.get('/api/allSchedulesAsList', (req,res) =>{
     res.send(schedules);
+});
+
+
+app.put('/api/newReview', (req,res) =>{
+    var body = req.body;
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+
+    
+    const schedulesList = schedules.find(c => c.email.localeCompare(body.email) ==0);
+    if(schedulesList){
+
+        for(i=0;i<schedules.length;i++){
+            if(schedules[i].email.localeCompare(body.email) ==0){
+                const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
+                if(schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" already exists");
+                if(schedules[i].schedules.length <20){
+
+                    var newSchedule = {
+                        "scheduleName": body.scheduleName,
+                        "status": "private",
+                        "description":body.description,
+                        "lastModified":dateTime,
+                        "codes": []
+                        }
+                    schedules[i].schedules.push(newSchedule);
+                    updateSchedules();
+                    return res.send(schedules[i]);
+                }
+                else{
+                    res.status(400).send("Maximum number of schedules reached");
+                }
+            }
+        }
+        
+    }
+    else{
+        
+        var newReview = {
+        "username": body.username,
+        "dateCreated":dateTime,
+        "courseID":body.courseID,
+        "review": body.review
+        }
+        reviews.push(newReview);
+        updateReviews();
+        res.send(newReview);
+    }
 });
 
 function validateScheduleName(course){

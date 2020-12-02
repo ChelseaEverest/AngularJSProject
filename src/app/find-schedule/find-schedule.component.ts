@@ -3,6 +3,8 @@ import { Schedule } from '../schedule';
 import { Course } from '../course';
 import { ScheduleService } from '../schedule.service';
 import { CourseService } from '../course.service';
+import {MatDialog} from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-find-schedule',
@@ -16,7 +18,7 @@ export class FindScheduleComponent implements OnInit {
   selectedSchedule: Schedule;
   courses: Course;
 
-  constructor(private scheduleService: ScheduleService,private courseService: CourseService) {
+  constructor(private scheduleService: ScheduleService,private courseService: CourseService,public dialog: MatDialog) {
     this.selectedSchedule = scheduleService.selectedSchedule;
     this.scheduleService.selectedScheduleChange.subscribe(value => this.selectedSchedule = value);
    }
@@ -24,13 +26,22 @@ export class FindScheduleComponent implements OnInit {
   ngOnInit(): void {
   }
   delete(): void {
-    var name = this.selectedSchedule.scheduleName;
-    if (!name) { return; }
-    this.scheduleService.deleteSchedule(name)
-      .subscribe(schedule => {
-        this.updateEvent.emit("");
-        this.selectedSchedule = undefined;
-      });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: "Are you sure you want to delete schedule " + this.selectedSchedule.scheduleName + "?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        var name = this.selectedSchedule.scheduleName;
+        if (!name) { return; }
+        this.scheduleService.deleteSchedule(name)
+          .subscribe(schedule => {
+            this.updateEvent.emit("");
+            this.selectedSchedule = undefined;
+            this.scheduleService.newSelectedSchedule(undefined)
+          });
+      }
+    });
   }
   changeStatus(): void {
     this.scheduleService.updateScheduleStatus(this.selectedSchedule.scheduleName)
