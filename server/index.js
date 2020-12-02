@@ -554,6 +554,10 @@ app.get('/api/allSchedulesAsList', (req,res) =>{
     res.send(schedules);
 });
 
+app.get('/api/getReviews', (req,res) =>{
+    res.send(reviews);
+});
+
 
 app.put('/api/newReview', (req,res) =>{
     var body = req.body;
@@ -562,41 +566,32 @@ app.put('/api/newReview', (req,res) =>{
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date+' '+time;
 
-    
-    const schedulesList = schedules.find(c => c.email.localeCompare(body.email) ==0);
-    if(schedulesList){
+    var courseID = body.courseID;
+    const reviewsContainsCourse = reviews.find(c => c.courseID.localeCompare(courseID) ==0);
+    if(reviewsContainsCourse){
 
-        for(i=0;i<schedules.length;i++){
-            if(schedules[i].email.localeCompare(body.email) ==0){
-                const schedule = schedules[i].schedules.find(c => c.scheduleName.localeCompare(body.scheduleName) ==0);
-                if(schedule) return res.status(400).send("The schedule with name "+body.scheduleName+" already exists");
-                if(schedules[i].schedules.length <20){
-
-                    var newSchedule = {
-                        "scheduleName": body.scheduleName,
-                        "status": "private",
-                        "description":body.description,
-                        "lastModified":dateTime,
-                        "codes": []
-                        }
-                    schedules[i].schedules.push(newSchedule);
-                    updateSchedules();
-                    return res.send(schedules[i]);
+        for(i=0;i<reviews.length;i++){
+            if(reviews[i].courseID.localeCompare(courseID) ==0){
+                var newReview = {
+                    "username": body.username,
+                    "dateCreated":dateTime,
+                    "review": body.review
                 }
-                else{
-                    res.status(400).send("Maximum number of schedules reached");
-                }
+                reviews[i].review.push(newReview);
+                updateReviews();
+                res.send(newReview);
             }
-        }
-        
+        } 
     }
     else{
         
         var newReview = {
-        "username": body.username,
-        "dateCreated":dateTime,
-        "courseID":body.courseID,
-        "review": body.review
+            "courseID":body.courseID,
+            "reviews": [{
+                "username": body.username,
+                "dateCreated":dateTime,
+                "review": body.review
+            }]
         }
         reviews.push(newReview);
         updateReviews();
