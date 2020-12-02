@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "firebase-admin": "^9.4.1",
     "fs": "0.0.1-security",
-    "joi": "^17.3.0"
+    "joi": "^17.3.0",
+    "sanitize": "^2.1.0"
   }
 }

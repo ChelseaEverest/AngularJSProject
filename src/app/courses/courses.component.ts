@@ -4,6 +4,8 @@ import { UpdateSchedule } from '../schedule';
 import { SubjectCode } from '../subjectCode';
 import { CourseService } from '../course.service';
 import { ScheduleService } from '../schedule.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReviewComponent } from '../review/review.component';
 
 @Component({
   selector: 'app-courses',
@@ -14,8 +16,10 @@ export class CoursesComponent implements OnInit {
   allSubjectCodes: string[] = [];
   classes: SubjectCode;
   clickedIndex;
+  clickedIndexForClasses;
+  clickedForReview = false;
 
-  constructor(private courseService: CourseService,private scheduleService: ScheduleService) {
+  constructor(private courseService: CourseService,private scheduleService: ScheduleService,public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -60,5 +64,22 @@ export class CoursesComponent implements OnInit {
       .subscribe(schedule => {
         this.scheduleService.newSelectedSchedule(selectedSchedule);
       });
+  }
+
+  getReview(index){
+    this.clickedForReview = !this.clickedForReview;
+    this.clickedIndexForClasses = index;
+  }
+  seeReview(index){
+    var className = this.classes.subjectCodes[index].className;
+    const dialogRef = this.dialog.open(ReviewComponent, {
+      width: '350px',
+      data: "Leave a review for " + className + "?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        console.log(result)
+      }
+    });
   }
 }

@@ -3,6 +3,7 @@ const Joi = require('joi');
 const app = express();
 const fs = require('fs');
 const dljs = require("damerau-levenshtein-js");
+var sanitizer = require('sanitize')();
 var admin = require('firebase-admin');
 
 admin.initializeApp({
@@ -561,21 +562,23 @@ app.get('/api/getReviews', (req,res) =>{
 
 app.put('/api/newReview', (req,res) =>{
     var body = req.body;
+    var username = sanitizer.value(body.username, 'string');
+    var review = sanitizer.value(body.review, 'string');
+    var courseID = sanitizer.value(body.courseID, 'string');
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date+' '+time;
 
-    var courseID = body.courseID;
     const reviewsContainsCourse = reviews.find(c => c.courseID.localeCompare(courseID) ==0);
     if(reviewsContainsCourse){
 
         for(i=0;i<reviews.length;i++){
             if(reviews[i].courseID.localeCompare(courseID) ==0){
                 var newReview = {
-                    "username": body.username,
+                    "username": username,
                     "dateCreated":dateTime,
-                    "review": body.review
+                    "review": review
                 }
                 reviews[i].review.push(newReview);
                 updateReviews();
@@ -586,11 +589,11 @@ app.put('/api/newReview', (req,res) =>{
     else{
         
         var newReview = {
-            "courseID":body.courseID,
+            "courseID":courseID,
             "reviews": [{
-                "username": body.username,
+                "username": username,
                 "dateCreated":dateTime,
-                "review": body.review
+                "review": review
             }]
         }
         reviews.push(newReview);

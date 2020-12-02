@@ -31,6 +31,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { PublicSchedulesComponent } from './public-schedules/public-schedules.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ReviewComponent } from './review/review.component';
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     RegisterComponent,
     UserComponent,
     PublicSchedulesComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    ReviewComponent
   ],
   bootstrap: [ AppComponent ],
   providers: [

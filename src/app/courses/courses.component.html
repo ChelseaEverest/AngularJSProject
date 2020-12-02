@@ -5,12 +5,16 @@
       <span class="badge">{{all}}</span>
       <div *ngIf="clickedIndex==i && classes">
         <ul class="subjectCode">
-            <li *ngFor="let course of classes.subjectCodes">
+            <li *ngFor="let course of classes.subjectCodes; index as j" (click)="getReview(j)">
               <span>{{course.classNumber}} {{course.courseCode}} {{course.className}}</span>
               <button (click)="addCourse(course.courseCode,all)" class="add">
                 +
               </button>
-
+              <div *ngIf="clickedForReview && clickedIndexForClasses==j">
+                <button (click)="seeReview(j)">
+                  Leave a Review
+                </button>
+              </div>
             </li>
         </ul>
       </div>
