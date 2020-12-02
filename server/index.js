@@ -3,6 +3,12 @@ const Joi = require('joi');
 const app = express();
 const fs = require('fs');
 const dljs = require("damerau-levenshtein-js");
+var admin = require('firebase-admin');
+
+admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: "https://se3316-ceveres4-lab5.firebaseio.com"
+  });
 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -528,7 +534,6 @@ app.get('/api/allPublicSchedules', (req,res) =>{
                 }
                 allPublicSchedules.push(newSchedule);
                 allPublicSchedules.sort(function(a, b){return Date.parse(b.lastModified)-Date.parse(a.lastModified)});
-                console.log(allPublicSchedules)
             }
         }
 

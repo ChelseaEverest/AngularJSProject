@@ -19,6 +19,7 @@
   "dependencies": {
     "damerau-levenshtein-js": "^1.1.7",
     "express": "^4.17.1",
+    "firebase-admin": "^9.4.1",
     "fs": "0.0.1-security",
     "joi": "^17.3.0"
   }

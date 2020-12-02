@@ -28,16 +28,20 @@ export class UserService {
        })
      })
    }
- 
-   updateCurrentUser(value){
-     return new Promise<any>((resolve, reject) => {
-       var user = firebase.default.auth().currentUser;
-       user.updateProfile({
-         displayName: value.name
-       }).then(res => {
-         resolve(res);
-       }, err => reject(err))
+
+   getTokenOfCurrentUser(){
+    return new Promise<any>((resolve, reject) => {
+     this.afAuth.currentUser.then((user)=>{
+       if(user){
+         user.getIdToken(true).then(token => {
+           resolve(token);
+         })
+       }
+       else{
+         reject('No user logged in')
+       }
      })
+    })
    }
 
   // Send email verfificaiton when new user sign up

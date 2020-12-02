@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, concatMap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { UserService } from './user.service';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,12 @@ export class ScheduleService {
   selectedSchedule: Schedule;
   selectedScheduleChange: Subject<Schedule> = new Subject<Schedule>();
 
-  constructor(public userService: UserService,private http: HttpClient,private messageService: MessageService) {
+  constructor(
+    public userService: UserService,
+    private http: HttpClient,
+    private messageService: MessageService,
+    public afAuth: AngularFireAuth
+    ) {
     this.selectedScheduleChange.subscribe((value) => {
       this.selectedSchedule = value
     });
