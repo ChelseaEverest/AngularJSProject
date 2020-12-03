@@ -3,7 +3,7 @@ const Joi = require('joi');
 const app = express();
 const fs = require('fs');
 const dljs = require("damerau-levenshtein-js");
-var sanitizer = require('sanitize')();
+
 var admin = require('firebase-admin');
 
 admin.initializeApp({
@@ -23,6 +23,7 @@ let rawdata = fs.readFileSync('Lab3-timetable-data.json');
 let timetable = JSON.parse(rawdata);
 
 app.use(express.json());
+app.use(require('sanitize').middleware);
 
 let rawschedules = fs.readFileSync('schedules.json')
 let schedules = JSON.parse(rawschedules);
@@ -562,23 +563,21 @@ app.get('/api/getReviews', (req,res) =>{
 
 app.put('/api/newReview', (req,res) =>{
     var body = req.body;
-    var username = sanitizer.value(body.username, 'string');
-    var review = sanitizer.value(body.review, 'string');
-    var courseID = sanitizer.value(body.courseID, 'string');
+
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date+' '+time;
 
-    const reviewsContainsCourse = reviews.find(c => c.courseID.localeCompare(courseID) ==0);
+    const reviewsContainsCourse = reviews.find(c => c.courseID.localeCompare(body.courseID) ==0);
     if(reviewsContainsCourse){
 
         for(i=0;i<reviews.length;i++){
-            if(reviews[i].courseID.localeCompare(courseID) ==0){
+            if(reviews[i].courseID.localeCompare(body.courseID) ==0){
                 var newReview = {
-                    "username": username,
+                    "username": body.username,
                     "dateCreated":dateTime,
-                    "review": review
+                    "review": body.review
                 }
                 reviews[i].review.push(newReview);
                 updateReviews();
@@ -589,11 +588,11 @@ app.put('/api/newReview', (req,res) =>{
     else{
         
         var newReview = {
-            "courseID":courseID,
+            "courseID":body.courseID,
             "reviews": [{
-                "username": username,
+                "username": body.username,
                 "dateCreated":dateTime,
-                "review": review
+                "review": body.review
             }]
         }
         reviews.push(newReview);

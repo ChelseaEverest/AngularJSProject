@@ -32,6 +32,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { PublicSchedulesComponent } from './public-schedules/public-schedules.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ReviewComponent } from './review/review.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { ReviewComponent } from './review/review.component';
     HttpClientModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatButtonModule
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests

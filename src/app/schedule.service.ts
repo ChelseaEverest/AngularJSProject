@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, concatMap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { UserService } from './user.service';
+import { Review,Reviews } from './review';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
@@ -22,9 +23,12 @@ export class ScheduleService {
   private updateScheduleUrl = 'api/updateSchedule';
   private updateScheduleStatusUrl = 'api/updateScheduleStatus';
   private allPublicSchedulesUrl = 'api/allPublicSchedules';
+  private newReviewUrl = 'api/newReview';
+  private allReviewsUrl = 'api/getReviews';
 
   selectedSchedule: Schedule;
   selectedScheduleChange: Subject<Schedule> = new Subject<Schedule>();
+  displayName:string;
 
   constructor(
     public userService: UserService,
@@ -63,6 +67,7 @@ export class ScheduleService {
         var body = {
           "email": res.email
           }
+          this.displayName = res.displayName
         return this.http.put<[]>(this.allSchedulesUrl,body, this.httpOptions).pipe(
           catchError(this.handleError<[]>('getSchedules'))
         );
@@ -152,6 +157,30 @@ export class ScheduleService {
 
     return this.http.get<PublicSchedule[]>(url).pipe(
       catchError(this.handleError<PublicSchedule[]>('allPublicSchedules'))
+    );
+  }
+
+  getAllReviews(): Observable<Reviews[]> {
+    this.messageService.clear();
+    var url = this.allReviewsUrl;
+
+    return this.http.get<Reviews[]>(url).pipe(
+      catchError(this.handleError<Reviews[]>('allReviews'))
+    );
+  }
+
+  addReview(review: string, courseID: string): Observable<Review> {
+    this.messageService.clear();
+    var url = this.newReviewUrl;
+
+    var body = {
+      "username": this.displayName,
+      "courseID":courseID,
+      "review": review
+    }
+    console.log(body)
+    return this.http.put<Review>(url,body, this.httpOptions).pipe(
+      catchError(this.handleError<Review>('addReview'))
     );
   }
 

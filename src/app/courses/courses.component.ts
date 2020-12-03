@@ -70,7 +70,7 @@ export class CoursesComponent implements OnInit {
     this.clickedForReview = !this.clickedForReview;
     this.clickedIndexForClasses = index;
   }
-  seeReview(index){
+  seeReview(index,number){
     var className = this.classes.subjectCodes[index].className;
     const dialogRef = this.dialog.open(ReviewComponent, {
       width: '350px',
@@ -79,6 +79,7 @@ export class CoursesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         console.log(result)
+        this.scheduleService.addReview(result,number);
       }
     });
   }

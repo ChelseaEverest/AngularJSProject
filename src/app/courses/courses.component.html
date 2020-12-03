@@ -11,7 +11,7 @@
                 +
               </button>
               <div *ngIf="clickedForReview && clickedIndexForClasses==j">
-                <button (click)="seeReview(j)">
+                <button (click)="seeReview(j,course.classNumber)">
                   Leave a Review
                 </button>
               </div>
